@@ -283,6 +283,50 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
     assert {user.role for user in memory_session.scalars(select(User)).all()} == {ANNOTATOR_ROLE, ADMIN_ROLE}
 
 
+def test_seed_demo_data_repairs_positions_above_fixed_offset(memory_session: Session) -> None:
+    dataset = Dataset(name="Notas demo", status=DATASET_ACTIVE)
+    memory_session.add(dataset)
+    memory_session.flush()
+
+    deleted_at = datetime(2026, 9, 3, 12, 0, tzinfo=timezone.utc)
+    memory_session.add_all(
+        [
+            Note(
+                dataset_id=dataset.id,
+                external_id="nota-01",
+                position=1,
+                title="Stale title",
+                text="Stale text",
+            ),
+            Note(
+                dataset_id=dataset.id,
+                external_id="nota-02",
+                position=10001,
+                title="Another stale title",
+                text="Another stale text",
+                deleted_at=deleted_at,
+            ),
+            Note(
+                dataset_id=dataset.id,
+                external_id="nota-extra",
+                position=10002,
+                title="Preserved title",
+                text="Preserved text",
+            ),
+        ]
+    )
+    memory_session.commit()
+
+    seed_demo_data(memory_session, get_settings())
+
+    notes = memory_session.scalars(select(Note).order_by(Note.position)).all()
+    assert [note.position for note in notes] == list(range(1, 12))
+    assert [note.external_id for note in notes] == [f"nota-{index:02d}" for index in range(1, 11)] + ["nota-extra"]
+    deleted_note = memory_session.scalar(select(Note).where(Note.external_id == "nota-02"))
+    assert deleted_note is not None
+    assert deleted_note.deleted_at is not None
+    assert deleted_note.deleted_at.replace(tzinfo=None) == deleted_at.replace(tzinfo=None)
+
 
 def test_seed_demo_data_keeps_canonical_notes_stable_on_idempotent_run(memory_session: Session) -> None:
     seed_demo_data(memory_session, get_settings())

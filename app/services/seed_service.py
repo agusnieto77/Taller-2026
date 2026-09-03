@@ -19,7 +19,6 @@ _NOTES_PATH = _SEED_DIR / "notes.json"
 _USERS_PATH = _SEED_DIR / "users.json"
 _DEMO_DATASET_NAME = "Notas demo"
 _PASSWORD_HASHER = PasswordHash.recommended()
-_DATASET_POSITION_REPAIR_OFFSET = 10_000
 _SQLITE_SEED_RETRIES = 3
 _SQLITE_RETRYABLE_ERROR_MARKERS = (
     "database is locked",
@@ -181,8 +180,11 @@ def _ensure_demo_notes(db: Session, dataset_id: int, notes: list[dict[str, Any]]
         return
 
     if existing_notes:
-        for temporary_position, note in enumerate(sorted(existing_notes, key=lambda current: (current.position, current.id)), start=1):
-            note.position = _DATASET_POSITION_REPAIR_OFFSET + temporary_position
+        temporary_position_base = max(abs(note.position) for note in existing_notes) + len(existing_notes) + 1
+        for temporary_position, note in enumerate(
+            sorted(existing_notes, key=lambda current: (current.position, current.id))
+        ):
+            note.position = temporary_position_base + temporary_position
         db.flush()
 
     extras = sorted(preserved_extras, key=lambda note: (note.position, note.id))
