@@ -36,7 +36,16 @@ class User(Base):
 
 class Dataset(Base):
     __tablename__ = "datasets"
-    __table_args__ = (CheckConstraint(f"status IN ('{DATASET_ACTIVE}', '{DATASET_ARCHIVED}')", name="ck_datasets_status_valid"),)
+    __table_args__ = (
+        CheckConstraint(f"status IN ('{DATASET_ACTIVE}', '{DATASET_ARCHIVED}')", name="ck_datasets_status_valid"),
+        Index(
+            "uq_datasets_single_active",
+            "status",
+            unique=True,
+            sqlite_where=sa_text("status = 'active'"),
+            postgresql_where=sa_text("status = 'active'"),
+        ),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)

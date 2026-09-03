@@ -62,6 +62,14 @@ def upgrade() -> None:
             name="ck_datasets_status_valid",
         ),
     )
+    op.create_index(
+        "uq_datasets_single_active",
+        "datasets",
+        ["status"],
+        unique=True,
+        sqlite_where=sa.text("status = 'active'"),
+        postgresql_where=sa.text("status = 'active'"),
+    )
 
     op.create_table(
         "notes",
@@ -185,5 +193,6 @@ def downgrade() -> None:
     op.drop_index("ix_notes_active_lookup", table_name="notes")
     op.drop_table("notes")
     op.drop_table("annotation_rounds")
+    op.drop_index("uq_datasets_single_active", table_name="datasets")
     op.drop_table("datasets")
     op.drop_table("users")
