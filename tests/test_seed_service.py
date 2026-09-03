@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 from sqlalchemy import MetaData, Table, create_engine, event, select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -53,6 +53,8 @@ def test_initial_migration_and_model_metadata_enforce_unique_usernames_and_singl
     env = os.environ.copy()
     env["DATABASE_URL"] = db_url
 
+    engine = create_engine(db_url)
+
     subprocess.run(
         [sys.executable, "-m", "alembic", "upgrade", "head"],
         cwd=repo_root,
@@ -60,13 +62,15 @@ def test_initial_migration_and_model_metadata_enforce_unique_usernames_and_singl
         check=True,
     )
 
+    with engine.connect() as conn:
+        assert conn.exec_driver_sql("SELECT version_num FROM alembic_version").scalar_one() == "0002_harden_schema"
+
     assert User.__table__.columns["username"].unique is True
     active_dataset_index = next(index for index in Dataset.__table__.indexes if index.name == "uq_datasets_single_active")
     assert active_dataset_index.unique is True
     assert active_dataset_index.dialect_options["sqlite"]["where"] is not None
     assert active_dataset_index.dialect_options["postgresql"]["where"] is not None
 
-    engine = create_engine(db_url)
     users = Table("users", MetaData(), autoload_with=engine)
     datasets = Table("datasets", MetaData(), autoload_with=engine)
 
@@ -194,7 +198,6 @@ def test_seeded_usernames_trim_and_validate() -> None:
             ]
         )
 
-
 def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -> None:
     dataset = Dataset(id=1, name="Notas demo", status=DATASET_ACTIVE)
     round_one = AnnotationRound(
@@ -241,8 +244,21 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
         metadata_json={"source": "fixture"},
         deleted_at=deleted_at,
     )
+    extra_note = Note(
+        id=3,
+        dataset_id=1,
+        external_id="nota-extra",
+        position=2,
+        title="Titular extra",
+        text="Texto extra",
+        published_at=None,
+        outlet="Fixture",
+        url="https://example.invalid/fixture/extra",
+        section="Opinión",
+        metadata_json={"source": "fixture"},
+    )
 
-    memory_session.add_all([dataset, round_one, existing_user, stale_note, deleted_note])
+    memory_session.add_all([dataset, round_one, existing_user, stale_note, deleted_note, extra_note])
     memory_session.commit()
 
     seed_demo_data(memory_session, get_settings())
@@ -252,7 +268,7 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
     assert demo_dataset.id == 1
     assert memory_session.query(Dataset).count() == 1
     assert memory_session.query(AnnotationRound).count() == 2
-    assert memory_session.query(Note).count() == 10
+    assert memory_session.query(Note).count() == 11
     assert memory_session.query(User).count() == 4
 
     rounds = memory_session.scalars(select(AnnotationRound).order_by(AnnotationRound.round_number)).all()
@@ -261,19 +277,82 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
     assert rounds[1].definition_visible is True
 
     notes = memory_session.scalars(select(Note).order_by(Note.position)).all()
-    assert [note.position for note in notes] == list(range(1, 11))
-    assert [note.external_id for note in notes] == [f"nota-{index:02d}" for index in range(1, 11)]
+    assert [note.position for note in notes] == list(range(1, 12))
+    assert [note.external_id for note in notes] == [f"nota-{index:02d}" for index in range(1, 11)] + ["nota-extra"]
     assert memory_session.scalar(select(Note).where(Note.external_id == "nota-02")).deleted_at == deleted_at
     assert {user.role for user in memory_session.scalars(select(User)).all()} == {ANNOTATOR_ROLE, ADMIN_ROLE}
 
 
-def test_seed_demo_data_commits_after_read_only_autobegin_transaction(memory_session: Session) -> None:
+
+def test_seed_demo_data_keeps_canonical_notes_stable_on_idempotent_run(memory_session: Session) -> None:
+    seed_demo_data(memory_session, get_settings())
+
+    before = {
+        note.external_id: (note.position, note.updated_at)
+        for note in memory_session.scalars(select(Note).order_by(Note.position)).all()
+    }
+
+    seed_demo_data(memory_session, get_settings())
+
+    after = {
+        note.external_id: (note.position, note.updated_at)
+        for note in memory_session.scalars(select(Note).order_by(Note.position)).all()
+    }
+
+    assert after == before
+
+
+def test_seed_demo_data_commits_on_fresh_session(memory_session: Session) -> None:
+    assert not memory_session.in_transaction()
+
+    seed_demo_data(memory_session, get_settings())
+
+    assert not memory_session.in_transaction()
+    assert memory_session.query(Dataset).count() == 1
+    assert memory_session.query(AnnotationRound).count() == 2
+    assert memory_session.query(Note).count() == 10
+    assert memory_session.query(User).count() == 4
+
+
+def test_seed_demo_data_retries_retryable_sqlite_errors(memory_session: Session, monkeypatch: pytest.MonkeyPatch) -> None:
+    attempts = {"count": 0}
+    original = seed_service._seed_demo_data_body
+
+    def flaky_seed_body(db: Session) -> None:
+        attempts["count"] += 1
+        if attempts["count"] == 1:
+            raise OperationalError("seed_demo_data", None, RuntimeError("database is locked"))
+        original(db)
+
+    monkeypatch.setattr(seed_service, "_seed_demo_data_body", flaky_seed_body)
+
+    seed_demo_data(memory_session, get_settings())
+
+    assert attempts["count"] == 2
+    assert memory_session.query(Dataset).count() == 1
+    assert memory_session.query(Note).count() == 10
+
+
+def test_seed_demo_data_leaves_active_core_write_transaction_open(memory_session: Session) -> None:
+    memory_session.execute(
+        Dataset.__table__.insert(),
+        {"name": "Caller dataset", "status": DATASET_ARCHIVED},
+    )
+    assert memory_session.in_transaction()
+
+    seed_demo_data(memory_session, get_settings())
+
+    assert memory_session.in_transaction()
+    memory_session.rollback()
+    assert memory_session.query(Dataset).count() == 0
+
+def test_seed_demo_data_keeps_read_only_autobegin_transaction_open(memory_session: Session) -> None:
     memory_session.execute(select(Dataset.id)).all()
     assert memory_session.in_transaction()
 
     seed_demo_data(memory_session, get_settings())
 
-    assert not memory_session.in_transaction()
+    assert memory_session.in_transaction()
     assert memory_session.query(Dataset).count() == 1
     assert memory_session.query(AnnotationRound).count() == 2
     assert memory_session.query(Note).count() == 10
@@ -295,6 +374,19 @@ def test_seed_demo_data_leaves_unrelated_active_dataset_untouched(memory_session
     assert memory_session.query(Note).count() == 0
     assert memory_session.query(User).count() == 0
 
+
+def test_seed_demo_data_leaves_flushed_orm_write_transaction_open(memory_session: Session) -> None:
+    caller_dataset = Dataset(id=1, name="Caller dataset", status=DATASET_ARCHIVED)
+    memory_session.add(caller_dataset)
+    memory_session.flush()
+    assert memory_session.in_transaction()
+
+    seed_demo_data(memory_session, get_settings())
+
+    assert memory_session.in_transaction()
+
+    memory_session.rollback()
+    assert memory_session.query(Dataset).count() == 0
 
 def test_seed_demo_data_preserves_caller_pending_changes_and_rolls_back_seed_writes(memory_session: Session, monkeypatch: pytest.MonkeyPatch) -> None:
     caller_dataset = Dataset(id=1, name="Caller dataset", status=DATASET_ARCHIVED)

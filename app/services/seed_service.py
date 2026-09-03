@@ -7,8 +7,8 @@ from typing import Any
 
 from pwdlib import PasswordHash
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session, SessionTransactionOrigin
+from sqlalchemy.exc import IntegrityError, OperationalError
+from sqlalchemy.orm import Session
 
 from app.config import Settings
 from app.constants import DATASET_ACTIVE, ROUND_ONE, ROUND_TWO, ROUND_TWO_DEFINITION
@@ -20,6 +20,13 @@ _USERS_PATH = _SEED_DIR / "users.json"
 _DEMO_DATASET_NAME = "Notas demo"
 _PASSWORD_HASHER = PasswordHash.recommended()
 _DATASET_POSITION_REPAIR_OFFSET = 10_000
+_SQLITE_SEED_RETRIES = 3
+_SQLITE_RETRYABLE_ERROR_MARKERS = (
+    "database is locked",
+    "database table is locked",
+    "database schema is locked",
+    "unique constraint failed",
+)
 
 
 def hash_password(password: str) -> str:
@@ -110,13 +117,25 @@ def _ensure_demo_rounds(db: Session, dataset_id: int) -> None:
             round_.definition_visible = round_data["definition_visible"]
 
 
-def _ensure_demo_notes(db: Session, dataset_id: int, notes: list[dict[str, Any]]) -> None:
-    existing_notes = {
-        note.external_id: note
-        for note in db.scalars(select(Note).where(Note.dataset_id == dataset_id)).all()
-    }
+def _note_matches_seed(note: Note, note_data: tuple[int, str, str, str, date | None, str | None, str | None, str | None, Any]) -> bool:
+    position, _external_id, title, text, published_at, outlet, url, section, metadata_json = note_data
+    return (
+        note.position == position
+        and note.title == title
+        and note.text == text
+        and note.published_at == published_at
+        and note.outlet == outlet
+        and note.url == url
+        and note.section == section
+        and note.metadata_json == metadata_json
+    )
 
-    desired_notes: list[tuple[int, str, str, str, date | None, str | None, str | None, str | None, Any, Note | None]] = []
+
+def _ensure_demo_notes(db: Session, dataset_id: int, notes: list[dict[str, Any]]) -> None:
+    existing_notes = list(db.scalars(select(Note).where(Note.dataset_id == dataset_id)).all())
+    seed_external_ids = {str(note["id"]) for note in notes}
+    desired_notes: list[tuple[int, str, str, str, date | None, str | None, str | None, str | None, Any]] = []
+
     for position, note in enumerate(notes, start=1):
         external_id = str(note["id"])
         title = str(note["titulo"])
@@ -137,17 +156,39 @@ def _ensure_demo_notes(db: Session, dataset_id: int, notes: list[dict[str, Any]]
                 str(url) if url is not None else None,
                 str(section) if section is not None else None,
                 metadata_json,
-                existing_notes.get(external_id),
             )
         )
 
+    existing_seed_notes = {note.external_id: note for note in existing_notes if note.external_id in seed_external_ids}
+    preserved_extras = [note for note in existing_notes if note.external_id not in seed_external_ids]
+
+    canonical = True
+    for note_data in desired_notes:
+        existing_note = existing_seed_notes.get(note_data[1])
+        if existing_note is None or not _note_matches_seed(existing_note, note_data):
+            canonical = False
+            break
+
+    if canonical:
+        expected_position = len(desired_notes) + 1
+        for extra in sorted(preserved_extras, key=lambda note: (note.position, note.id)):
+            if extra.position != expected_position:
+                canonical = False
+                break
+            expected_position += 1
+
+    if canonical:
+        return
+
     if existing_notes:
-        for position, *_, existing_note in desired_notes:
-            if existing_note is not None:
-                existing_note.position = position + _DATASET_POSITION_REPAIR_OFFSET
+        for temporary_position, note in enumerate(sorted(existing_notes, key=lambda current: (current.position, current.id)), start=1):
+            note.position = _DATASET_POSITION_REPAIR_OFFSET + temporary_position
         db.flush()
 
-    for position, external_id, title, text, published_at, outlet, url, section, metadata_json, existing_note in desired_notes:
+    extras = sorted(preserved_extras, key=lambda note: (note.position, note.id))
+
+    for position, external_id, title, text, published_at, outlet, url, section, metadata_json in desired_notes:
+        existing_note = existing_seed_notes.get(external_id)
         if existing_note is None:
             db.add(
                 Note(
@@ -180,6 +221,9 @@ def _ensure_demo_notes(db: Session, dataset_id: int, notes: list[dict[str, Any]]
             existing_note.section = section
         if existing_note.metadata_json != metadata_json:
             existing_note.metadata_json = metadata_json
+
+    for position, note in enumerate(extras, start=len(desired_notes) + 1):
+        note.position = position
 
 
 def _ensure_demo_users(db: Session, users: list[dict[str, Any]], seeded_usernames: set[str]) -> None:
@@ -256,6 +300,11 @@ def _ensure_demo_dataset(db: Session) -> Dataset | None:
         raise
 
 
+def _is_retryable_sqlite_error(exc: Exception) -> bool:
+    message = str(getattr(exc, "orig", exc)).lower()
+    return any(marker in message for marker in _SQLITE_RETRYABLE_ERROR_MARKERS)
+
+
 def _seed_demo_data_body(db: Session) -> None:
     dataset = _ensure_demo_dataset(db)
     if dataset is None:
@@ -270,29 +319,27 @@ def _seed_demo_data_body(db: Session) -> None:
     _ensure_demo_users(db, users, seeded_usernames)
 
 
+def _seed_demo_data_with_retries(db: Session) -> None:
+    for attempt in range(_SQLITE_SEED_RETRIES):
+        try:
+            with db.begin():
+                _seed_demo_data_body(db)
+            return
+        except (IntegrityError, OperationalError) as exc:
+            if db.get_bind().dialect.name != "sqlite" or not _is_retryable_sqlite_error(exc):
+                raise
+            if attempt + 1 >= _SQLITE_SEED_RETRIES:
+                raise
+            db.expire_all()
+
+
 def seed_demo_data(db: Session, settings: Settings) -> None:
     if not settings.seed_demo_data:
         return
 
-    transaction = db.get_transaction()
-    pending_changes = bool(db.new or db.dirty or db.deleted)
-    read_only_autobegin = transaction is not None and transaction.origin is SessionTransactionOrigin.AUTOBEGIN and not pending_changes
-
-    if not db.in_transaction():
-        with db.begin():
+    if db.in_transaction():
+        with db.begin_nested():
             _seed_demo_data_body(db)
         return
 
-    if read_only_autobegin:
-        try:
-            with db.begin_nested():
-                _seed_demo_data_body(db)
-        except Exception:
-            db.rollback()
-            raise
-        else:
-            db.commit()
-        return
-
-    with db.begin_nested():
-        _seed_demo_data_body(db)
+    _seed_demo_data_with_retries(db)
