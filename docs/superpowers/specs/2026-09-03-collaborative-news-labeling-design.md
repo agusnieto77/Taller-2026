@@ -1,7 +1,7 @@
 # Diseño: etiquetado colaborativo de notas periodísticas
 
 **Fecha:** 2026-09-03  
-**Estado:** aprobado por la persona solicitante  
+**Estado:** diseño validado en conversación; pendiente de revisión del documento  
 **Alcance:** primera versión funcional local, preparada para VPS Linux
 
 ## 1. Objetivo y alcance
@@ -33,7 +33,7 @@ Se implementará un monolito server-rendered:
 - **Contraseñas:** hash Argon2.
 - **Pruebas:** pytest y TestClient de FastAPI.
 
-La aplicación utilizará rutas síncronas y sesiones SQLAlchemy síncronas para mantener el código pequeño y directo. `DATABASE_URL` permitirá cambiar SQLite por PostgreSQL posteriormente sin trasladar la lógica de negocio a las rutas.
+La aplicación utilizará rutas síncronas y sesiones de SQLAlchemy síncronas para mantener el código pequeño y directo. `DATABASE_URL` permitirá cambiar SQLite por PostgreSQL posteriormente sin trasladar la lógica de negocio a las rutas.
 
 Estructura prevista:
 
@@ -154,7 +154,7 @@ La cantidad respondida se calcula desde `annotations` para evitar un contador de
 5. En ronda 1 no aparece la definición de conflicto.
 6. El usuario pulsa `CONFLICTO` o `NO CONFLICTO`.
 7. El servidor valida el estado y guarda etiqueta y progreso en una transacción.
-8. La respuesta HTTP usa el patrón Post/Redirect/Get y dirige a la siguiente nota pendiente.
+8. La respuesta HTTP usa el patrón Post/Redirect/Get y dirige a la siguiente nota pendiente. La ruta de continuar no permitirá saltar notas no respondidas: siempre abrirá la primera pendiente. Se podrán revisar y corregir notas anteriores de la ronda actual, pero la ronda solo se completará cuando todas estén respondidas.
 9. Al responder la última nota, la ronda 1 queda completada y bloqueada.
 10. El usuario ve una pantalla de transición con la definición de la ronda 2.
 11. La ronda 2 se habilita para ese usuario inmediatamente, sin esperar a otros anotadores.
