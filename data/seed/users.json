@@ -1,0 +1,26 @@
+[
+  {
+    "username": "ana",
+    "display_name": "Ana López",
+    "password": "local-only-ana-2026",
+    "role": "annotator"
+  },
+  {
+    "username": "bruno",
+    "display_name": "Bruno Pérez",
+    "password": "local-only-bruno-2026",
+    "role": "annotator"
+  },
+  {
+    "username": "carla",
+    "display_name": "Carla Gómez",
+    "password": "local-only-carla-2026",
+    "role": "annotator"
+  },
+  {
+    "username": "admin",
+    "display_name": "Admin Demo",
+    "password": "local-only-admin-2026",
+    "role": "admin"
+  }
+]

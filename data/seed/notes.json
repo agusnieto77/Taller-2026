@@ -1,0 +1,102 @@
+[
+  {
+    "id": "nota-01",
+    "titulo": "Cientos de vecinos marchan contra el aumento del boleto",
+    "texto": "Más de 300 personas se reunieron frente al municipio para reclamar por el aumento del boleto urbano y exigir una audiencia pública. La marcha avanzó hasta la plaza central con pancartas y cánticos. No se registraron incidentes.",
+    "fecha": "2026-01-15",
+    "medio": "Diario Ejemplo",
+    "url": "https://example.invalid/notas/01",
+    "seccion": "Política",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-02",
+    "titulo": "Un grupo de docentes tomó la rectoría de la facultad",
+    "texto": "Unas sesenta personas ocuparon durante una hora el hall principal de la facultad para pedir la reapertura de paritarias y la reposición de becas. La protesta fue convocada por el gremio docente y se desarrolló de manera pacífica.",
+    "fecha": "2026-01-16",
+    "medio": "La Crónica Ficticia",
+    "url": "https://example.invalid/notas/02",
+    "seccion": "Sociedad",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-03",
+    "titulo": "Vecinos del barrio Sur volvieron a reunirse por los cortes de luz",
+    "texto": "El encuentro reunió a una docena de familias en el salón comunitario para intercambiar teléfonos de emergencia y organizar una olla popular. Aunque hubo quejas hacia la distribuidora eléctrica, la actividad fue más bien una asamblea vecinal que una movilización en la calle.",
+    "fecha": "2026-01-17",
+    "medio": "Panorama Urbano",
+    "url": "https://example.invalid/notas/03",
+    "seccion": "Ciudad",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-04",
+    "titulo": "Manifestación frente al congreso por la reforma jubilatoria",
+    "texto": "La plaza frente al congreso reunió a unas ochocientas personas que rechazaron la reforma jubilatoria y pidieron frenar el ajuste. Delegaciones sindicales, organizaciones de jubilados y centros estudiantiles marcharon con consignas dirigidas al parlamento.",
+    "fecha": "2026-01-18",
+    "medio": "El Observador Local",
+    "url": "https://example.invalid/notas/04",
+    "seccion": "Política",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-05",
+    "titulo": "Empleados de una cadena de cafeterías reclamaron por los turnos",
+    "texto": "Treinta y cinco trabajadores de distintas sucursales se concentraron en la vereda de la empresa para pedir mejoras salariales y denunciar cambios imprevistos de horario. La acción estaba dirigida exclusivamente a la gerencia de la cadena y no a autoridades públicas.",
+    "fecha": "2026-01-19",
+    "medio": "Noticias del Centro",
+    "url": "https://example.invalid/notas/05",
+    "seccion": "Economía",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-06",
+    "titulo": "Más de cincuenta jóvenes cerraron la avenida por el clima",
+    "texto": "Un colectivo ambiental interrumpió el tránsito con carteles y tambores para exigir medidas contra las inundaciones y frenar un proyecto vial. Según la policía, participaron cerca de setenta manifestantes y la movilización se dirigió al gobierno provincial.",
+    "fecha": "2026-01-20",
+    "medio": "Clarín Ficticio",
+    "url": "https://example.invalid/notas/06",
+    "seccion": "Ambiente",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-07",
+    "titulo": "Una asamblea barrial debatió el futuro del centro cultural",
+    "texto": "Casi veinte vecinos, artistas y docentes conversaron durante dos horas sobre la programación del centro cultural municipal. Al finalizar, acordaron pedir una reunión con la secretaría de cultura, pero la actividad no pasó de ser un intercambio interno en un salón cerrado.",
+    "fecha": "2026-01-21",
+    "medio": "La Voz Ficticia",
+    "url": "https://example.invalid/notas/07",
+    "seccion": "Cultura",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-08",
+    "titulo": "Cierre total de ruta por el reclamo de transportistas",
+    "texto": "Unos ciento veinte camioneros bloquearon la ruta nacional para exigir tarifas de referencia y controles al transporte informal. La medida afectó a varios kilómetros de circulación y terminó con una mesa de negociación convocada por el ministerio.",
+    "fecha": "2026-01-22",
+    "medio": "Diario Ejemplo",
+    "url": "https://example.invalid/notas/08",
+    "seccion": "Economía",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-09",
+    "titulo": "Estudiantes secundarios entregaron una carta en la municipalidad",
+    "texto": "Unos cuarenta estudiantes y dos docentes dejaron una carta en mesa de entradas para pedir becas de transporte. No hubo marcha ni corte de calles; apenas una visita coordinada con las autoridades locales.",
+    "fecha": "2026-01-23",
+    "medio": "Noticias del Centro",
+    "url": "https://example.invalid/notas/09",
+    "seccion": "Educación",
+    "metadata": {"source": "demo"}
+  },
+  {
+    "id": "nota-10",
+    "titulo": "Organizaciones sociales coparon la plaza por alimentos y trabajo",
+    "texto": "Miles de personas participaron de una jornada de reclamo frente a la sede del gobierno nacional para exigir alimentos, empleo y la continuidad de los programas sociales. Las columnas llegaron desde distintos barrios y la movilización se mantuvo durante toda la tarde.",
+    "fecha": "2026-01-24",
+    "medio": "Panorama Urbano",
+    "url": "https://example.invalid/notas/10",
+    "seccion": "Política",
+    "metadata": {"source": "demo"}
+  }
+]
