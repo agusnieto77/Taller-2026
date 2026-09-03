@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.constants import ADMIN_ROLE, ANNOTATOR_ROLE, DATASET_ACTIVE, ROUND_ONE, ROUND_TWO
+from app.constants import ADMIN_ROLE, ANNOTATOR_ROLE, DATASET_ACTIVE, ROUND_ONE, ROUND_TWO, ROUND_TWO_DEFINITION
 from app.database import Base, get_db
 from app.main import app
 from app.models import AnnotationRound, Dataset, Note, User
@@ -70,7 +70,7 @@ def seeded_db(db: Session) -> Session:
         dataset_id=1,
         round_number=ROUND_TWO,
         name="Ronda 2",
-        definition_text="Definición visible",
+        definition_text=ROUND_TWO_DEFINITION,
         definition_visible=True,
     )
     users = [

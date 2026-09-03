@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.config import get_settings
 from app.database import Base
+import app.models  # noqa: F401
 
 config = context.config
 settings = get_settings()
