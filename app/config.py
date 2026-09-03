@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from functools import lru_cache
 
-from pydantic import Field, model_validator
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = Field(default="Etiquetado colaborativo", validation_alias="APP_TITLE")
+    app_name: str = "Etiquetado colaborativo"
     app_env: str = "development"
     secret_key: str = "local-only-change-me"
     database_url: str = "sqlite:///./data/app.db"
