@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
 from app.config import Settings
-from app.constants import DATASET_ACTIVE, ROUND_ONE, ROUND_TWO, ROUND_TWO_DEFINITION
+from app.constants import ADMIN_ROLE, ANNOTATOR_ROLE, DATASET_ACTIVE, ROUND_ONE, ROUND_TWO, ROUND_TWO_DEFINITION
 from app.models import AnnotationRound, Dataset, Note, User
 
 _SEED_DIR = Path(__file__).resolve().parents[2] / "data" / "seed"
@@ -48,8 +48,9 @@ def _load_seed_notes() -> list[dict[str, Any]]:
 
 def _load_seed_users() -> list[dict[str, Any]]:
     users = _load_json_array(_USERS_PATH)
-    if len(users) != 4:
-        raise ValueError("Seed users fixture must contain exactly 4 users")
+    roles = [str(user.get("role", "")) for user in users]
+    if roles.count(ANNOTATOR_ROLE) != 20 or roles.count(ADMIN_ROLE) != 1:
+        raise ValueError("Seed users fixture must contain 20 annotators and 1 admin")
     return users
 
 

@@ -1,0 +1,16 @@
+{% extends 'admin/base.html' %}
+{% block title %}Administración · Resumen{% endblock %}
+{% block admin_content %}
+<header class="page-heading compact"><div><p class="eyebrow">Vista general</p><h1>Resumen</h1><p class="lead">Estado actual del estudio y accesos rápidos de gestión.</p></div></header>
+{% if dataset %}
+<section class="dataset-banner"><div><span class="status-dot" aria-hidden="true"></span><p><small>Conjunto activo</small><strong>{{ dataset.name }}</strong></p></div><a class="button secondary button-small" href="/admin/notes">Ver notas</a></section>
+<div class="admin-metrics">
+  <article><span>Notas activas</span><strong>{{ note_count }}</strong><small>en el conjunto actual</small></article>
+  <article><span>Participantes</span><strong>{{ annotator_count }}</strong><small>anotadores activos</small></article>
+  <article><span>Anotaciones</span><strong>{{ annotation_count }}</strong><small>respuestas registradas</small></article>
+</div>
+{% else %}
+<div class="empty-state large"><strong>No hay un conjunto activo</strong><span>Importá un archivo para comenzar el estudio.</span><a class="button primary" href="/admin/import">Importar notas</a></div>
+{% endif %}
+<section class="quick-actions" aria-labelledby="quick-actions-title"><div class="section-heading"><div><p class="eyebrow">Gestión</p><h2 id="quick-actions-title">Acciones rápidas</h2></div></div><div class="quick-action-grid"><a href="/admin/import"><strong>Reemplazar conjunto</strong><span>Validar e importar un archivo CSV o JSON.</span><b aria-hidden="true">→</b></a><a href="/admin/users"><strong>Gestionar usuarios</strong><span>Crear participantes y administrar accesos.</span><b aria-hidden="true">→</b></a><a href="/admin/progress"><strong>Revisar progreso</strong><span>Consultar el avance por participante y ronda.</span><b aria-hidden="true">→</b></a><a href="/admin/results"><strong>Analizar resultados</strong><span>Ver acuerdos y desacuerdos del estudio.</span><b aria-hidden="true">→</b></a></div></section>
+{% endblock %}

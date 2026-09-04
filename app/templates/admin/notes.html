@@ -1,0 +1,10 @@
+{% extends 'admin/base.html' %}
+{% block title %}Administración · Notas{% endblock %}
+{% block admin_content %}
+<header class="page-heading compact"><div><p class="eyebrow">Conjunto activo</p><h1>Notas</h1><p class="lead">Revisá, buscá y editá el material del estudio.</p></div><a class="button primary" href="/admin/notes/new">Agregar nota <span aria-hidden="true">＋</span></a></header>
+<form method="get" class="search-form" role="search"><label class="sr-only" for="q">Buscar por título o ID</label><input id="q" name="q" value="{{ q }}" placeholder="Buscar por título o ID…"><button class="button secondary" type="submit">Buscar</button>{% if q %}<a class="quiet-link" href="/admin/notes">Limpiar</a>{% endif %}</form>
+<div class="table-panel">
+  <div class="panel-heading"><div><h2>Notas activas</h2><span>{{ notes|length }} resultado{% if notes|length != 1 %}s{% endif %}</span></div></div>
+  {% if notes %}<div class="table-wrap"><table><caption class="sr-only">Notas activas del conjunto</caption><thead><tr><th scope="col">Posición</th><th scope="col">ID externo</th><th scope="col">Título</th><th scope="col" class="actions-column">Acciones</th></tr></thead><tbody>{% for note in notes %}<tr><td data-label="Posición"><span class="position-number">{{ note.position }}</span></td><td data-label="ID"><code>{{ note.external_id }}</code></td><td data-label="Título"><strong>{{ note.title }}</strong></td><td data-label="Acciones"><div class="row-actions"><a class="button ghost button-small" href="/admin/notes/{{ note.id }}/edit">Editar</a><form method="post" action="/admin/notes/{{ note.id }}/delete"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="button danger-quiet button-small" type="submit" aria-label="Retirar nota {{ note.position }}: {{ note.title }}">Retirar</button></form></div></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state"><strong>No encontramos notas</strong><span>{% if q %}Probá con otro título o ID.{% else %}Agregá una nota para comenzar.{% endif %}</span></div>{% endif %}
+</div>
+{% endblock %}

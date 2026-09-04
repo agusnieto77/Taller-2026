@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Tu progreso · Etiquetado colaborativo{% endblock %}
+{% block content %}
+<header class="page-heading dashboard-heading">
+  <div>
+    <p class="eyebrow">Panel de trabajo</p>
+    <h1>Tu progreso</h1>
+    <p class="lead">Clasificá las mismas notas en dos rondas independientes. Tus respuestas se guardan con cada elección.</p>
+  </div>
+  {% set total_answered = statuses[0].answered_count + statuses[1].answered_count %}
+  {% set total_notes = statuses[0].total_count + statuses[1].total_count %}
+  <div class="overall-progress" aria-label="Progreso total: {{ total_answered }} de {{ total_notes }} clasificaciones">
+    <span>Progreso total</span><strong>{{ total_answered }}/{{ total_notes }}</strong>
+    <progress value="{{ total_answered }}" max="{{ total_notes if total_notes else 1 }}">{{ total_answered }} de {{ total_notes }}</progress>
+  </div>
+</header>
+<div class="round-grid">
+  {% for status in statuses %}
+  <section class="round-card {% if status.can_start and not status.completed %}is-current{% endif %}">
+    <div class="round-card-top">
+      <span class="round-number" aria-hidden="true">0{{ status.round_number }}</span>
+      {% if status.completed %}<span class="badge badge-success">Completada</span>{% elif status.can_start %}<span class="badge badge-active">En curso</span>{% else %}<span class="badge">Bloqueada</span>{% endif %}
+    </div>
+    <h2>{{ status.name }}</h2>
+    <p class="round-description">{% if status.round_number == 1 %}Primera lectura, sin una definición visible.{% else %}Segunda lectura con la definición de protesta disponible.{% endif %}</p>
+    <div class="progress-summary"><strong>{{ status.answered_count }}</strong><span>de {{ status.total_count }} notas</span></div>
+    <progress value="{{ status.answered_count }}" max="{{ status.total_count if status.total_count else 1 }}">{{ status.answered_count }} de {{ status.total_count }}</progress>
+    <div class="round-action">
+      {% if status.can_start and not (status.completed and status.locked) %}
+      <a class="button primary" href="/labeling/round/{{ status.round_number }}">{% if status.answered_count %}Continuar ronda{% else %}Comenzar ronda{% endif %}<span aria-hidden="true">→</span></a>
+      {% elif status.completed %}
+      <span class="completion-note">Todas las notas clasificadas{% if status.locked %} · ronda cerrada{% endif %}</span>
+      {% elif status.round_number == 2 %}
+      <span class="locked-note">Disponible al completar la ronda 1</span>
+      {% endif %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% if statuses[0].completed and statuses[1].completed %}
+<section class="completion-banner"><div><p class="eyebrow">Trabajo completado</p><h2>Ya podés revisar la comparación</h2></div><a class="button secondary" href="/results">Ver resultados <span aria-hidden="true">→</span></a></section>
+{% endif %}
+{% endblock %}

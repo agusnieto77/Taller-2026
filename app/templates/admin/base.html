@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block container_class %}admin-container{% endblock %}
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-heading"><p class="eyebrow">Panel interno</p><h2>Administración</h2></div>
+    <nav class="admin-nav" aria-label="Navegación de administración">
+      <a href="/admin" {% if request.url.path == '/admin' %}aria-current="page"{% endif %}><span>Resumen</span></a>
+      <a href="/admin/notes" {% if request.url.path.startswith('/admin/notes') %}aria-current="page"{% endif %}><span>Notas</span></a>
+      <a href="/admin/import" {% if request.url.path == '/admin/import' %}aria-current="page"{% endif %}><span>Importar</span></a>
+      <a href="/admin/users" {% if request.url.path == '/admin/users' %}aria-current="page"{% endif %}><span>Usuarios</span></a>
+      <a href="/admin/progress" {% if request.url.path == '/admin/progress' %}aria-current="page"{% endif %}><span>Progreso</span></a>
+      <a href="/admin/annotations" {% if request.url.path == '/admin/annotations' %}aria-current="page"{% endif %}><span>Anotaciones</span></a>
+      <a href="/admin/results" {% if request.url.path == '/admin/results' %}aria-current="page"{% endif %}><span>Resultados</span></a>
+    </nav>
+  </aside>
+  <section class="admin-content">{% block admin_content %}{% endblock %}</section>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{{ status.name }} · Nota {{ note.position }}{% endblock %}
+{% block container_class %}task-container{% endblock %}
+{% block content %}
+<header class="task-header">
+  <div class="task-heading-row">
+    <div><p class="eyebrow">{{ status.name }}</p><h1>Nota {{ note.position }} <span>de {{ status.total_count }}</span></h1></div>
+    <a class="quiet-link" href="/labeling">Ver progreso</a>
+  </div>
+  <div class="task-progress" aria-label="{{ status.answered_count }} de {{ status.total_count }} notas respondidas">
+    <progress value="{{ status.answered_count }}" max="{{ status.total_count if status.total_count else 1 }}">{{ status.answered_count }} de {{ status.total_count }}</progress>
+    <span>{{ status.answered_count }}/{{ status.total_count }} respondidas</span>
+  </div>
+</header>
+{% if definition_text %}
+<aside class="definition" aria-labelledby="definition-title">
+  <span class="definition-mark" aria-hidden="true">i</span>
+  <div><p class="eyebrow">Criterio de esta ronda</p><h2 id="definition-title">Definición de protesta</h2><p>{{ definition_text }}</p></div>
+</aside>
+{% endif %}
+<article class="news-card">
+  <header>
+    <div class="article-meta">
+      {% if note.section %}<span class="badge">{{ note.section }}</span>{% endif %}
+      {% if note.outlet %}<span>{{ note.outlet }}</span>{% endif %}
+      {% if note.published_at %}<time datetime="{{ note.published_at }}">{{ note.published_at }}</time>{% endif %}
+    </div>
+    <h2>{{ note.title }}</h2>
+  </header>
+  <div class="article-text">{{ note.text }}</div>
+  {% if note.url %}<footer><a class="source-link" href="{{ note.url }}" target="_blank" rel="noopener noreferrer">Abrir fuente original <span aria-hidden="true">↗</span></a></footer>{% endif %}
+</article>
+<section class="decision-panel" aria-labelledby="decision-title">
+  <div class="decision-copy"><p class="eyebrow">Tu clasificación</p><h2 id="decision-title">¿La nota informa sobre una protesta?</h2><p>Elegí una opción para guardar y avanzar a la siguiente nota.</p></div>
+  <form class="label-form" method="post" action="/labeling/round/{{ round_number }}/note/{{ note.id }}/label" data-existing="{{ 'true' if annotation else 'false' }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button class="label label-true" name="value" value="true" type="submit" data-shortcut="1" {% if annotation and annotation.value %}aria-pressed="true"{% endif %}>
+      <span class="decision-key" aria-hidden="true">1</span><span><strong>TRUE · Sí</strong><small>La nota informa sobre una protesta</small></span>
+    </button>
+    <button class="label label-false" name="value" value="false" type="submit" data-shortcut="2" {% if annotation and not annotation.value %}aria-pressed="true"{% endif %}>
+      <span class="decision-key" aria-hidden="true">2</span><span><strong>FALSE · No</strong><small>La nota no informa sobre una protesta</small></span>
+    </button>
+  </form>
+  <p class="keyboard-hint">Atajo de teclado: <kbd>1</kbd> para TRUE · Sí, <kbd>2</kbd> para FALSE · No</p>
+</section>
+<noscript><p class="alert">La clasificación funciona sin JavaScript, pero los atajos y la protección contra doble envío no estarán disponibles.</p></noscript>
+<script src="/static/app.js?v=4" defer></script>
+{% endblock %}

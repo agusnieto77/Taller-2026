@@ -199,6 +199,9 @@ def test_seeded_usernames_trim_and_validate() -> None:
         )
 
 def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -> None:
+    seed_ids = [str(note["id"]) for note in seed_service._load_seed_notes()]
+    seed_users = seed_service._load_seed_users()
+    first_seed_user = seed_users[0]
     dataset = Dataset(id=1, name="Notas demo", status=DATASET_ACTIVE)
     round_one = AnnotationRound(
         id=1,
@@ -210,9 +213,9 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
     )
     existing_user = User(
         id=1,
-        username="ana",
-        display_name="Ana López",
-        password_hash=hash_password("local-only-ana-2026"),
+        username=str(first_seed_user["username"]),
+        display_name=str(first_seed_user["display_name"]),
+        password_hash=hash_password(str(first_seed_user["password"])),
         role=ANNOTATOR_ROLE,
         active=True,
     )
@@ -220,7 +223,7 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
     stale_note = Note(
         id=1,
         dataset_id=1,
-        external_id="nota-01",
+        external_id=seed_ids[0],
         position=7,
         title="Titular 1",
         text="Texto 1",
@@ -233,7 +236,7 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
     deleted_note = Note(
         id=2,
         dataset_id=1,
-        external_id="nota-02",
+        external_id=seed_ids[1],
         position=1,
         title="Titular 2",
         text="Texto 2",
@@ -268,8 +271,8 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
     assert demo_dataset.id == 1
     assert memory_session.query(Dataset).count() == 1
     assert memory_session.query(AnnotationRound).count() == 2
-    assert memory_session.query(Note).count() == 11
-    assert memory_session.query(User).count() == 4
+    assert memory_session.query(Note).count() == len(seed_ids) + 1
+    assert memory_session.query(User).count() == len(seed_users)
 
     rounds = memory_session.scalars(select(AnnotationRound).order_by(AnnotationRound.round_number)).all()
     assert [round_.round_number for round_ in rounds] == [ROUND_ONE, ROUND_TWO]
@@ -277,13 +280,14 @@ def test_seed_demo_data_repairs_existing_demo_dataset(memory_session: Session) -
     assert rounds[1].definition_visible is True
 
     notes = memory_session.scalars(select(Note).order_by(Note.position)).all()
-    assert [note.position for note in notes] == list(range(1, 12))
-    assert [note.external_id for note in notes] == [f"nota-{index:02d}" for index in range(1, 11)] + ["nota-extra"]
-    assert memory_session.scalar(select(Note).where(Note.external_id == "nota-02")).deleted_at == deleted_at
+    assert [note.position for note in notes] == list(range(1, len(seed_ids) + 2))
+    assert [note.external_id for note in notes] == seed_ids + ["nota-extra"]
+    assert memory_session.scalar(select(Note).where(Note.external_id == seed_ids[1])).deleted_at == deleted_at
     assert {user.role for user in memory_session.scalars(select(User)).all()} == {ANNOTATOR_ROLE, ADMIN_ROLE}
 
 
 def test_seed_demo_data_repairs_positions_above_fixed_offset(memory_session: Session) -> None:
+    seed_ids = [str(note["id"]) for note in seed_service._load_seed_notes()]
     dataset = Dataset(name="Notas demo", status=DATASET_ACTIVE)
     memory_session.add(dataset)
     memory_session.flush()
@@ -293,14 +297,14 @@ def test_seed_demo_data_repairs_positions_above_fixed_offset(memory_session: Ses
         [
             Note(
                 dataset_id=dataset.id,
-                external_id="nota-01",
+                external_id=seed_ids[0],
                 position=1,
                 title="Stale title",
                 text="Stale text",
             ),
             Note(
                 dataset_id=dataset.id,
-                external_id="nota-02",
+                external_id=seed_ids[1],
                 position=10001,
                 title="Another stale title",
                 text="Another stale text",
@@ -320,9 +324,9 @@ def test_seed_demo_data_repairs_positions_above_fixed_offset(memory_session: Ses
     seed_demo_data(memory_session, get_settings())
 
     notes = memory_session.scalars(select(Note).order_by(Note.position)).all()
-    assert [note.position for note in notes] == list(range(1, 12))
-    assert [note.external_id for note in notes] == [f"nota-{index:02d}" for index in range(1, 11)] + ["nota-extra"]
-    deleted_note = memory_session.scalar(select(Note).where(Note.external_id == "nota-02"))
+    assert [note.position for note in notes] == list(range(1, len(seed_ids) + 2))
+    assert [note.external_id for note in notes] == seed_ids + ["nota-extra"]
+    deleted_note = memory_session.scalar(select(Note).where(Note.external_id == seed_ids[1]))
     assert deleted_note is not None
     assert deleted_note.deleted_at is not None
     assert deleted_note.deleted_at.replace(tzinfo=None) == deleted_at.replace(tzinfo=None)
@@ -355,7 +359,7 @@ def test_seed_demo_data_commits_on_fresh_session(memory_session: Session) -> Non
     assert memory_session.query(Dataset).count() == 1
     assert memory_session.query(AnnotationRound).count() == 2
     assert memory_session.query(Note).count() == 10
-    assert memory_session.query(User).count() == 4
+    assert memory_session.query(User).count() == len(seed_service._load_seed_users())
 
 
 def test_seed_demo_data_retries_retryable_sqlite_errors(memory_session: Session, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -400,7 +404,7 @@ def test_seed_demo_data_keeps_read_only_autobegin_transaction_open(memory_sessio
     assert memory_session.query(Dataset).count() == 1
     assert memory_session.query(AnnotationRound).count() == 2
     assert memory_session.query(Note).count() == 10
-    assert memory_session.query(User).count() == 4
+    assert memory_session.query(User).count() == len(seed_service._load_seed_users())
 
 
 def test_seed_demo_data_leaves_unrelated_active_dataset_untouched(memory_session: Session) -> None:
@@ -453,18 +457,17 @@ def test_seed_demo_data_preserves_caller_pending_changes_and_rolls_back_seed_wri
 
 def test_seed_demo_data_uses_normalized_usernames(memory_session: Session, monkeypatch: pytest.MonkeyPatch) -> None:
     users = [dict(user) for user in seed_service._load_seed_users()]
-    users[0]["username"] = " ana "
-    users[1]["username"] = "\nbruno\t"
+    expected_usernames = sorted(str(user["username"]) for user in users)
+    users[0]["username"] = f" {users[0]['username']} "
+    users[1]["username"] = f"\n{users[1]['username']}\t"
     monkeypatch.setattr(seed_service, "_load_seed_users", lambda: users)
 
     seed_demo_data(memory_session, get_settings())
 
-    assert sorted(user.username for user in memory_session.scalars(select(User).order_by(User.username)).all()) == [
-        "admin",
-        "ana",
-        "bruno",
-        "carla",
-    ]
+    assert sorted(
+        user.username
+        for user in memory_session.scalars(select(User).order_by(User.username)).all()
+    ) == expected_usernames
 
 
 def test_seed_demo_data_allows_missing_fecha(memory_session: Session, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -474,7 +477,9 @@ def test_seed_demo_data_allows_missing_fecha(memory_session: Session, monkeypatc
 
     seed_demo_data(memory_session, get_settings())
 
-    first_note = memory_session.scalar(select(Note).where(Note.external_id == "nota-01"))
+    first_note = memory_session.scalar(
+        select(Note).where(Note.external_id == str(notes[0]["id"]))
+    )
     assert first_note is not None
     assert first_note.published_at is None
     assert memory_session.query(Note).count() == 10

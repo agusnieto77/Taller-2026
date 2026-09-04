@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Ronda 1 completada{% endblock %}
+{% block container_class %}transition-container{% endblock %}
+{% block content %}
+<section class="transition-card">
+  <div class="milestone" aria-hidden="true"><span>✓</span></div>
+  <p class="eyebrow">Primera ronda completada</p>
+  <h1>Ahora comienza una nueva lectura</h1>
+  <p class="lead">Vas a clasificar las mismas notas otra vez. Tus respuestas anteriores permanecen ocultas para preservar la independencia de esta ronda.</p>
+  <aside class="definition" aria-labelledby="transition-definition">
+    <span class="definition-mark" aria-hidden="true">i</span>
+    <div><p class="eyebrow">Criterio para la ronda 2</p><h2 id="transition-definition">Definición de protesta</h2><p>{{ status.definition_text }}</p></div>
+  </aside>
+  <div class="transition-actions"><a class="button primary" href="/labeling/round/2">Comenzar ronda 2 <span aria-hidden="true">→</span></a><a class="quiet-link" href="/labeling">Volver al progreso</a></div>
+</section>
+{% endblock %}

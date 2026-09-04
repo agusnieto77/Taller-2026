@@ -1,0 +1,13 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Editar nota' if note else 'Nueva nota' }} · Administración{% endblock %}
+{% block admin_content %}
+<header class="page-heading compact"><div><a class="back-link" href="/admin/notes">← Volver a notas</a><p class="eyebrow">Contenido del estudio</p><h1>{{ 'Editar nota' if note else 'Nueva nota' }}</h1><p class="lead">{% if note %}Actualizá los datos de esta nota sin modificar su posición.{% else %}Completá los datos mínimos para incorporarla al conjunto activo.{% endif %}</p></div></header>
+{% if error %}<div class="alert alert-error" role="alert"><strong>No se pudo guardar.</strong><span>{{ error }}</span></div>{% endif %}
+<form class="form-panel stack-form" method="post" action="{{ '/admin/notes/' ~ note.id ~ '/edit' if note else '/admin/notes/new' }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="field"><label for="external_id">ID externo</label><input id="external_id" name="external_id" value="{{ note.external_id if note else '' }}" required maxlength="64" placeholder="ej. nota-001" aria-describedby="external-id-help"><small id="external-id-help">Identificador único dentro del conjunto.</small></div>
+  <div class="field"><label for="title">Título</label><input id="title" name="title" value="{{ note.title if note else '' }}" required maxlength="255" placeholder="Título periodístico completo"></div>
+  <div class="field"><label for="text">Texto</label><textarea id="text" name="text" required rows="14" placeholder="Contenido completo de la nota…">{{ note.text if note else '' }}</textarea><small>Conservá los párrafos originales para facilitar la lectura.</small></div>
+  <div class="form-actions"><button class="button primary" type="submit">Guardar nota</button><a class="button ghost" href="/admin/notes">Cancelar</a></div>
+</form>
+{% endblock %}

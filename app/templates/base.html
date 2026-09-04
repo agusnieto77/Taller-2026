@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <meta name="description" content="Plataforma de etiquetado colaborativo de notas periodísticas">
+  <title>{% block title %}Etiquetado colaborativo{% endblock %}</title>
+  <link rel="stylesheet" href="/static/styles.css?v=4">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip-link" href="#main-content">Ir al contenido principal</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="brand" aria-label="Etiquetado colaborativo, inicio">
+        <span class="brand-mark" aria-hidden="true">EC</span>
+        <span class="brand-copy"><strong>Etiquetado</strong><small>colaborativo</small></span>
+      </a>
+      {% if user %}
+      <div class="header-account">
+        <span class="avatar" aria-hidden="true">{{ user.display_name[:1]|upper }}</span>
+        <span class="account-name">{{ user.display_name }}</span>
+      </div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="/labeling" {% if request.url.path.startswith('/labeling') %}aria-current="page"{% endif %}>Tarea</a>
+        <a class="nav-link" href="/results" {% if request.url.path == '/results' %}aria-current="page"{% endif %}>Resultados</a>
+        {% if user.role == 'admin' %}<a class="nav-link" href="/admin" {% if request.url.path.startswith('/admin') %}aria-current="page"{% endif %}>Administración</a>{% endif %}
+        <form method="post" action="/logout" class="inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button type="submit" class="nav-link logout-button">Salir</button>
+        </form>
+      </nav>
+      {% endif %}
+    </div>
+  </header>
+  <main id="main-content" class="container {% block container_class %}{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
+  {% if user %}
+  <footer class="site-footer"><p>Plataforma de investigación · Etiquetado colaborativo</p></footer>
+  {% endif %}
+</body>
+</html>

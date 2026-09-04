@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Ingresar · Etiquetado colaborativo{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block container_class %}auth-container{% endblock %}
+{% block content %}
+<section class="auth-shell" aria-labelledby="login-title">
+  <div class="auth-intro">
+    <p class="eyebrow">Investigación colaborativa</p>
+    <h1>Clasificar con criterio.<br>Comparar con claridad.</h1>
+    <p class="lead">Una herramienta enfocada para analizar notas periodísticas en rondas independientes y obtener resultados consistentes.</p>
+    <ul class="feature-list" aria-label="Características de la plataforma">
+      <li><span aria-hidden="true">01</span> Dos rondas de clasificación</li>
+      <li><span aria-hidden="true">02</span> Respuestas independientes</li>
+      <li><span aria-hidden="true">03</span> Resultados comparativos</li>
+    </ul>
+  </div>
+  <section class="login-panel" aria-labelledby="login-title">
+    <p class="panel-kicker">Acceso al estudio</p>
+    <h2 id="login-title">Ingresar</h2>
+    <p class="muted">Usá las credenciales asignadas por administración.</p>
+    {% if error %}<div class="alert alert-error" role="alert"><strong>No pudimos ingresar.</strong><span>{{ error }}</span></div>{% endif %}
+    <form method="post" action="/login" class="stack-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="field">
+        <label for="username">Usuario</label>
+        <input id="username" name="username" autocomplete="username" required autofocus placeholder="Tu usuario">
+      </div>
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña">
+      </div>
+      <button class="button primary button-wide" type="submit">Ingresar a la plataforma</button>
+    </form>
+    <p class="login-help">¿No tenés acceso? Contactá a la persona responsable del estudio.</p>
+  </section>
+</section>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'admin/base.html' %}
+{% block title %}Administración · Importar notas{% endblock %}
+{% block admin_content %}
+<header class="page-heading compact"><div><p class="eyebrow">Conjunto de datos</p><h1>Importar notas</h1><p class="lead">Validamos el archivo completo antes de modificar el conjunto activo.</p></div></header>
+{% if error %}<div class="alert alert-error" role="alert"><strong>La importación no pudo completarse.</strong><span>{{ error }}</span></div>{% endif %}
+<div class="import-layout">
+  <form class="form-panel stack-form" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="field"><label for="name">Nombre del conjunto</label><input id="name" name="name" value="Notas importadas" required maxlength="255"></div>
+    <div class="field file-field"><label for="file">Archivo de notas</label><input id="file" type="file" name="file" accept=".json,.csv,text/csv,application/json" required aria-describedby="file-help"><span id="file-help">Formatos aceptados: CSV o JSON.</span></div>
+    <button class="button primary" type="submit">Validar e importar</button>
+  </form>
+  <aside class="info-panel"><p class="eyebrow">Antes de continuar</p><h2>Esta acción reemplaza el conjunto activo</h2><ul><li>El archivo se valida antes de guardar cambios.</li><li>Las notas deben incluir ID, título y texto.</li><li>El conjunto actual se conserva si ocurre un error.</li></ul></aside>
+</div>
+{% endblock %}

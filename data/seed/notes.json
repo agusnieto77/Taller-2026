@@ -1,102 +1,82 @@
 [
   {
-    "id": "nota-01",
-    "titulo": "Cientos de vecinos marchan contra el aumento del boleto",
-    "texto": "Más de 300 personas se reunieron frente al municipio para reclamar por el aumento del boleto urbano y exigir una audiencia pública. La marcha avanzó hasta la plaza central con pancartas y cánticos. No se registraron incidentes.",
-    "fecha": "2026-01-15",
-    "medio": "Diario Ejemplo",
-    "url": "https://example.invalid/notas/01",
+    "id": "real-01",
+    "titulo": "La Municipalidad de Villa María acordó un aumento salarial con el SUOEM",
+    "texto": "La Municipalidad de Villa María firmó un acta de acuerdo salarial con el Sindicato Unión Obreros y Empleados Municipales (SUOEM). El convenio establece un aumento del 2,6%, que se liquidará con los haberes de marzo, y eleva el incremento acumulado de 2026 al 8,21%. El acta fue ratificada por el secretario de Gobierno, Cultura y Relaciones Institucionales, Marcos Bovo; el director de Capital Humano, Nicolás Macagno; y el secretario general del SUOEM, Sergio Rodríguez. Las partes acordaron continuar trabajando durante abril sobre aspectos paritarios y la carrera administrativa del personal.",
+    "medio": "El Diario del centro del país",
     "seccion": "Política",
-    "metadata": {"source": "demo"}
+    "metadata": {"source": "muestra-notas.ods"}
   },
   {
-    "id": "nota-02",
-    "titulo": "Un grupo de docentes tomó la rectoría de la facultad",
-    "texto": "Unas sesenta personas ocuparon durante una hora el hall principal de la facultad para pedir la reapertura de paritarias y la reposición de becas. La protesta fue convocada por el gremio docente y se desarrolló de manera pacífica.",
-    "fecha": "2026-01-16",
-    "medio": "La Crónica Ficticia",
-    "url": "https://example.invalid/notas/02",
+    "id": "real-02",
+    "titulo": "Trabajadores del Sanatorio Parque reclamaron por sueldos adeudados",
+    "texto": "Trabajadores del Sanatorio Parque reclamaron frente al establecimiento, ubicado en San Jerónimo al 3115 de la ciudad de Córdoba, por el pago de salarios adeudados. Según informó la Asociación de Trabajadores de la Sanidad (ATSA), los propietarios les dijeron que no tenían dinero para pagarles en ese momento y no ofrecieron otra explicación. El gremio señaló que los empleados no tenían cómo afrontar sus gastos y recordó que, además de los salarios pendientes, correspondía aplicar un aumento al sueldo de septiembre.",
+    "medio": "Muestra de notas",
+    "seccion": "Trabajo",
+    "metadata": {"source": "muestra-notas.ods"}
+  },
+  {
+    "id": "real-03",
+    "titulo": "Organizaciones sociales marcharon en Córdoba por trabajo y salarios dignos",
+    "texto": "Una movilización recorrió el centro de la ciudad de Córdoba en el marco de una jornada provincial de lucha por la crisis económica. Las organizaciones reclamaron trabajo genuino, salarios dignos y un salario mínimo vital y móvil superior a 119 mil pesos. También exigieron frenar la precarización laboral y rechazaron el ajuste del Fondo Monetario Internacional y la criminalización de la protesta. La convocatoria fue realizada por el Polo Obrero, la CTA Córdoba y la Asociación de Trabajadores del Estado (ATE Córdoba). La columna se concentró en el Patio Olmos y se desplazó hasta Humberto Primo al 401, donde se realizó una conferencia de prensa.",
+    "medio": "Muestra de notas",
     "seccion": "Sociedad",
-    "metadata": {"source": "demo"}
+    "metadata": {"source": "muestra-notas.ods"}
   },
   {
-    "id": "nota-03",
-    "titulo": "Vecinos del barrio Sur volvieron a reunirse por los cortes de luz",
-    "texto": "El encuentro reunió a una docena de familias en el salón comunitario para intercambiar teléfonos de emergencia y organizar una olla popular. Aunque hubo quejas hacia la distribuidora eléctrica, la actividad fue más bien una asamblea vecinal que una movilización en la calle.",
-    "fecha": "2026-01-17",
-    "medio": "Panorama Urbano",
-    "url": "https://example.invalid/notas/03",
-    "seccion": "Ciudad",
-    "metadata": {"source": "demo"}
-  },
-  {
-    "id": "nota-04",
-    "titulo": "Manifestación frente al congreso por la reforma jubilatoria",
-    "texto": "La plaza frente al congreso reunió a unas ochocientas personas que rechazaron la reforma jubilatoria y pidieron frenar el ajuste. Delegaciones sindicales, organizaciones de jubilados y centros estudiantiles marcharon con consignas dirigidas al parlamento.",
-    "fecha": "2026-01-18",
-    "medio": "El Observador Local",
-    "url": "https://example.invalid/notas/04",
-    "seccion": "Política",
-    "metadata": {"source": "demo"}
-  },
-  {
-    "id": "nota-05",
-    "titulo": "Empleados de una cadena de cafeterías reclamaron por los turnos",
-    "texto": "Treinta y cinco trabajadores de distintas sucursales se concentraron en la vereda de la empresa para pedir mejoras salariales y denunciar cambios imprevistos de horario. La acción estaba dirigida exclusivamente a la gerencia de la cadena y no a autoridades públicas.",
-    "fecha": "2026-01-19",
-    "medio": "Noticias del Centro",
-    "url": "https://example.invalid/notas/05",
-    "seccion": "Economía",
-    "metadata": {"source": "demo"}
-  },
-  {
-    "id": "nota-06",
-    "titulo": "Más de cincuenta jóvenes cerraron la avenida por el clima",
-    "texto": "Un colectivo ambiental interrumpió el tránsito con carteles y tambores para exigir medidas contra las inundaciones y frenar un proyecto vial. Según la policía, participaron cerca de setenta manifestantes y la movilización se dirigió al gobierno provincial.",
-    "fecha": "2026-01-20",
-    "medio": "Clarín Ficticio",
-    "url": "https://example.invalid/notas/06",
-    "seccion": "Ambiente",
-    "metadata": {"source": "demo"}
-  },
-  {
-    "id": "nota-07",
-    "titulo": "Una asamblea barrial debatió el futuro del centro cultural",
-    "texto": "Casi veinte vecinos, artistas y docentes conversaron durante dos horas sobre la programación del centro cultural municipal. Al finalizar, acordaron pedir una reunión con la secretaría de cultura, pero la actividad no pasó de ser un intercambio interno en un salón cerrado.",
-    "fecha": "2026-01-21",
-    "medio": "La Voz Ficticia",
-    "url": "https://example.invalid/notas/07",
-    "seccion": "Cultura",
-    "metadata": {"source": "demo"}
-  },
-  {
-    "id": "nota-08",
-    "titulo": "Cierre total de ruta por el reclamo de transportistas",
-    "texto": "Unos ciento veinte camioneros bloquearon la ruta nacional para exigir tarifas de referencia y controles al transporte informal. La medida afectó a varios kilómetros de circulación y terminó con una mesa de negociación convocada por el ministerio.",
-    "fecha": "2026-01-22",
-    "medio": "Diario Ejemplo",
-    "url": "https://example.invalid/notas/08",
-    "seccion": "Economía",
-    "metadata": {"source": "demo"}
-  },
-  {
-    "id": "nota-09",
-    "titulo": "Estudiantes secundarios entregaron una carta en la municipalidad",
-    "texto": "Unos cuarenta estudiantes y dos docentes dejaron una carta en mesa de entradas para pedir becas de transporte. No hubo marcha ni corte de calles; apenas una visita coordinada con las autoridades locales.",
-    "fecha": "2026-01-23",
-    "medio": "Noticias del Centro",
-    "url": "https://example.invalid/notas/09",
+    "id": "real-04",
+    "titulo": "La UEPC analiza una tercera oferta salarial del Gobierno de Córdoba",
+    "texto": "La Unión de Educadores de la Provincia de Córdoba (UEPC) analiza una tercera propuesta salarial del Gobierno provincial. El secretario general del gremio, Roberto Cristalli, la calificó como superadora. Para un maestro, la oferta contempla un salario de más de 1,5 millones de pesos y, para un director, de casi 2,5 millones. El esquema está atado al índice de precios al consumidor (IPC), pero no a la recaudación, e incluye aumentos mensuales remunerativos y un recupero salarial. También garantiza el pago del Fondo Nacional de Incentivo Docente (Fonid), elimina el tope de su complemento remunerativo, suspende el Fosaet durante la paritaria y prevé revisar el acuerdo en septiembre. Para los jubilados, establece que la pauta remunerativa de los activos se aplicará al cálculo de la movilidad y que la Ley de Equidad Jubilatoria se discutirá en la mesa de gremios aportantes a la Caja. La UEPC someterá la propuesta a asambleas informativas y resolutivas en las escuelas, reuniones departamentales y una asamblea provincial.",
+    "medio": "Muestra de notas",
     "seccion": "Educación",
-    "metadata": {"source": "demo"}
+    "metadata": {"source": "muestra-notas.ods"}
   },
   {
-    "id": "nota-10",
-    "titulo": "Organizaciones sociales coparon la plaza por alimentos y trabajo",
-    "texto": "Miles de personas participaron de una jornada de reclamo frente a la sede del gobierno nacional para exigir alimentos, empleo y la continuidad de los programas sociales. Las columnas llegaron desde distintos barrios y la movilización se mantuvo durante toda la tarde.",
-    "fecha": "2026-01-24",
-    "medio": "Panorama Urbano",
-    "url": "https://example.invalid/notas/10",
-    "seccion": "Política",
-    "metadata": {"source": "demo"}
+    "id": "real-05",
+    "titulo": "La UEPC inició un paro de 24 horas contra la propuesta salarial",
+    "texto": "La Unión de Educadores de la Provincia de Córdoba (UEPC) inició un paro de 24 horas en rechazo de la propuesta de aumento salarial del 38% realizada por el Gobierno provincial. La suba se aplicaría durante el segundo semestre y en cuatro cuotas. El Sindicato Argentino de Docentes Privados (Sadop) adhirió al reclamo y a la movilización. Ambos gremios exigieron mejores salarios, jubilaciones dignas y condiciones laborales justas. El secretario general de la UEPC, Juan Monserrat, cuestionó al Gobierno por sostener que tiene superávit mientras los salarios docentes permanecen por debajo de la línea de pobreza, en un contexto de inflación estimada entre el 80% y el 90%. Los sindicatos afirmaron que la adhesión fue contundente y pidieron a las familias consultar con las escuelas qué docentes se sumaban a la medida.",
+    "medio": "Muestra de notas",
+    "seccion": "Educación",
+    "metadata": {"source": "muestra-notas.ods"}
+  },
+  {
+    "id": "real-06",
+    "titulo": "El municipio de Córdoba cerró la paritaria con el SUOEM",
+    "texto": "La Municipalidad de Córdoba acordó con el Sindicato Unión Obreros y Empleados Municipales (SUOEM) un aumento salarial anual del 26,5%, que se pagará en seis tramos: 4,5% en marzo, 3,5% en mayo, 4,46% en junio, 3% en agosto, 4,33% en octubre y 4,2% en diciembre. Los incrementos son acumulativos y remunerativos. El acuerdo fue alcanzado después de prolongadas negociaciones entre el secretario de Administración Pública y Capital Humano, Sergio Lorenzatti, y la delegación gremial encabezada por Rubén Daniele. Más de 150 delegados aprobaron la propuesta y solo seis votaron en contra. El entendimiento puso fin a la negociación anual y busca evitar nuevos conflictos salariales durante 2026. En enero y febrero, los trabajadores habían recibido un bono no remunerativo de 150 mil pesos. El acuerdo fue una prioridad para el intendente Daniel Passerini y el gobernador Martín Llaryora, que también deben negociar con otros gremios estatales. En paralelo, la Provincia ofreció a los docentes aumentos automáticos y remunerativos por inflación, dos bonos —de 50 mil pesos en febrero y 22.500 en marzo— y un aumento del 92% del Fonid, que partía de 67 mil pesos. Para los jubilados docentes, se elevó a 1.650.000 pesos el piso del diferimiento, medida que alcanzaría al 80% del sector. El año anterior, el Suoem había mantenido un conflicto de casi dos meses con la gestión municipal.",
+    "medio": "Muestra de notas",
+    "seccion": "Trabajo",
+    "metadata": {"source": "muestra-notas.ods"}
+  },
+  {
+    "id": "real-07",
+    "titulo": "Docentes y jubilados marcharon en Río Tercero",
+    "texto": "Unos 300 trabajadores docentes, jubilados docentes y personas que apoyaron el paro y la movilización marcharon por las calles céntricas de la ciudad de Río Tercero durante la jornada provincial de lucha del miércoles 31 de agosto.",
+    "medio": "Muestra de notas",
+    "seccion": "Educación",
+    "metadata": {"source": "muestra-notas.ods"}
+  },
+  {
+    "id": "real-08",
+    "titulo": "Docentes de Villa María participaron de la movilización de la UEPC",
+    "texto": "Integrantes de la Unión de Educadores de la Provincia de Córdoba (UEPC) de Villa María participaron en la movilización realizada en la ciudad de Córdoba, durante un paro de 24 horas convocado por mejores salarios, jubilaciones dignas y condiciones laborales justas. Carlos Andrada señaló que la medida de fuerza tuvo una adhesión muy alta en el departamento San Martín y en toda la provincia, y que la participación superó las expectativas. También sostuvo que hacía mucho tiempo no se registraba una movilización de esa magnitud. Para el dirigente, el rechazo a la propuesta salarial del Gobierno debía expresarse en las calles.",
+    "medio": "Muestra de notas",
+    "seccion": "Educación",
+    "metadata": {"source": "muestra-notas.ods"}
+  },
+  {
+    "id": "real-09",
+    "titulo": "La UEPC recibió una tercera oferta salarial y la llevará a una asamblea",
+    "texto": "La UEPC recibió del gobernador Martín Llaryora una tercera oferta salarial que, según el Gobierno, permitirá que los salarios docentes superen la inflación. El gremio había exigido una recuperación por encima del índice de precios y mantuvo una extensa negociación en el Centro Cívico. La propuesta elimina la cláusula vinculada a la recaudación e incorpora aumentos automáticos, remunerativos y atados a la inflación. Incluye bonos de 50 mil pesos en febrero y marzo, un incremento del Fondo Nacional de Incentivo Docente (Fonid) y un aumento del 92% del fondo durante el año. Para un docente con 22 horas, el básico pasaría de 963.893 pesos a 1.040.993 en febrero y 1.374.493 en marzo; con 28 horas, pasaría de 1.229.531 a 1.317.472 y 1.374.972, respectivamente. También eleva a 1.650.000 pesos el monto a partir del cual los jubilados ingresan al diferimiento, por lo que el Gobierno estima que el 80% quedará fuera de ese mecanismo. La propuesta será evaluada por las delegaciones y resuelta en una asamblea provincial. Si se acepta, regirá hasta el 31 de enero de 2027. El Gobierno anticipó descuentos por dos días de paro, mientras la UEPC solicitará que no se apliquen.",
+    "medio": "Muestra de notas",
+    "seccion": "Educación",
+    "metadata": {"source": "muestra-notas.ods"}
+  },
+  {
+    "id": "real-10",
+    "titulo": "La UEPC reclamó un aumento salarial del 38% con un paro de 24 horas",
+    "texto": "La Unión de Educadores de la Provincia de Córdoba (UEPC) inició un paro de 24 horas contra la propuesta de aumento salarial del 38% del Gobierno provincial, que se pagaría en cuatro cuotas durante el segundo semestre. Sadop se sumó al reclamo y a la movilización. Los sindicatos exigieron mejores salarios, jubilaciones dignas y condiciones laborales justas. Juan Monserrat cuestionó que el Gobierno afirmara tener superávit mientras los salarios docentes estaban por debajo de la línea de pobreza, en un contexto de inflación estimada entre el 80% y el 90%. Ambos gremios informaron una adhesión contundente y solicitaron a las familias consultar con las escuelas qué docentes acatarían la medida de fuerza.",
+    "medio": "Muestra de notas",
+    "seccion": "Educación",
+    "metadata": {"source": "muestra-notas.ods"}
   }
 ]

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Resultados comparativos{% endblock %}
+{% block content %}
+<header class="page-heading results-heading">
+  <div><p class="eyebrow">Análisis del estudio</p><h1>Resultados comparativos</h1><p class="lead">Acuerdos, distribución y cambios entre las dos rondas de clasificación.</p></div>
+  <span class="badge {% if study.overall_status == 'DEFINITIVO' %}badge-success{% else %}badge-warning{% endif %}">{{ study.overall_status|capitalize }}</span>
+</header>
+{% for round, label, subtitle in [(study.round_one, 'Ronda 1', 'Sin definición visible'), (study.round_two, 'Ronda 2', 'Con definición de protesta')] %}
+<section class="results-section" aria-labelledby="round-{{ loop.index }}-title">
+  <header class="section-heading"><div><p class="eyebrow">{{ subtitle }}</p><h2 id="round-{{ loop.index }}-title">{{ label }}</h2></div><span class="badge {% if round.status == 'DEFINITIVO' %}badge-success{% else %}badge-warning{% endif %}">{{ round.status|capitalize }}</span></header>
+  <div class="metric-grid">
+    <article class="metric-card"><span>Acuerdo por nota</span><strong>{% if round.unanimity.agreement_percent is not none %}{{ round.unanimity.agreement_percent }}%{% else %}—{% endif %}</strong><small>{{ round.unanimity.agreements }} de {{ round.unanimity.comparable_notes }} comparables</small></article>
+    <article class="metric-card"><span>Acuerdo entre pares</span><strong>{% if round.pairwise.agreement_percent is not none %}{{ round.pairwise.agreement_percent }}%{% else %}—{% endif %}</strong><small>{{ round.pairwise.agreements }} de {{ round.pairwise.total_pairs }} pares</small></article>
+    <article class="metric-card"><span>Notas con respuesta</span><strong>{{ round.answered_notes }}</strong><small>{{ round.unanswered_notes }} pendientes</small></article>
+    <article class="metric-card"><span>Desacuerdos</span><strong>{{ round.unanimity.disagreements }}</strong><small>notas sin unanimidad</small></article>
+  </div>
+  <div class="results-columns">
+    <div class="data-panel"><h3>Distribución por participante</h3><div class="distribution-list">{% for name, values in round.distribution.items() %}<div class="distribution-row"><div><strong>{{ name }}</strong><span>{{ values.answered }} respuestas</span></div><div class="split-bar" aria-label="{{ name }}: {{ values.true }} TRUE y {{ values.false }} FALSE"><span class="split-true" style="--segment: {{ (values.true * 100 / values.answered) if values.answered else 0 }}%"></span><span class="split-false"></span></div><small><span>TRUE {{ values.true }}</span><span>FALSE {{ values.false }}</span></small></div>{% else %}<p class="empty-state">Todavía no hay respuestas para mostrar.</p>{% endfor %}</div></div>
+    <div class="data-panel"><h3>Resumen de comparabilidad</h3><dl class="summary-list"><div><dt>Comparables</dt><dd>{{ round.unanimity.comparable_notes }}</dd></div><div><dt>Acuerdos</dt><dd>{{ round.unanimity.agreements }}</dd></div><div><dt>Desacuerdos</dt><dd>{{ round.unanimity.disagreements }}</dd></div><div><dt>Pares evaluados</dt><dd>{{ round.pairwise.total_pairs }}</dd></div></dl></div>
+  </div>
+  <div class="data-panel disagreement-panel"><div class="panel-heading"><h3>Notas con desacuerdo</h3><span class="badge">{{ round.disagreements|length }}</span></div>{% if round.disagreements %}<div class="table-wrap"><table><caption class="sr-only">Desacuerdos de {{ label }}</caption><thead><tr><th scope="col">Nota</th>{% for name in round.disagreements[0].labels %}<th scope="col">{{ name }}</th>{% endfor %}</tr></thead><tbody>{% for row in round.disagreements %}<tr><td><strong>{{ row.position }} · {{ row.title }}</strong><small>{{ row.external_id }}</small></td>{% for value in row.labels.values() %}<td>{% if value is none %}<span class="badge">Pendiente</span>{% elif value %}<span class="badge badge-true">TRUE</span>{% else %}<span class="badge badge-false">FALSE</span>{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>{% else %}<p class="empty-state">No hay desacuerdos comparables en esta ronda.</p>{% endif %}</div>
+</section>
+{% endfor %}
+<section class="change-section">
+  <header class="section-heading"><div><p class="eyebrow">Efecto entre lecturas</p><h2>Cambios entre rondas</h2></div><strong class="change-total">{{ study.changes.comparable_labels }} <small>respuestas comparables</small></strong></header>
+  <div class="change-grid"><article><span class="change-dot true-false"></span><strong>{{ study.changes.true_to_false }}</strong><small>TRUE → FALSE</small></article><article><span class="change-dot false-true"></span><strong>{{ study.changes.false_to_true }}</strong><small>FALSE → TRUE</small></article><article><span class="change-dot unchanged"></span><strong>{{ study.changes.unchanged }}</strong><small>Sin cambio</small></article><article><span class="change-dot missing"></span><strong>{{ study.changes.missing_excluded }}</strong><small>Faltantes excluidos</small></article></div>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'admin/base.html' %}
+{% block title %}Administración · Resultados{% endblock %}
+{% block admin_content %}
+<header class="page-heading compact"><div><p class="eyebrow">Análisis</p><h1>Resultados</h1><p class="lead">Síntesis del acuerdo alcanzado en cada ronda.</p></div>{% if study %}<span class="badge {% if study.overall_status == 'DEFINITIVO' %}badge-success{% else %}badge-warning{% endif %}">{{ study.overall_status|capitalize }}</span>{% endif %}</header>
+{% if study %}
+<div class="admin-result-grid">
+  {% for round, label in [(study.round_one, 'Ronda 1'), (study.round_two, 'Ronda 2')] %}
+  <article class="admin-result-card"><div class="round-card-top"><span class="round-number" aria-hidden="true">0{{ loop.index }}</span><span class="badge {% if round.status == 'DEFINITIVO' %}badge-success{% else %}badge-warning{% endif %}">{{ round.status|capitalize }}</span></div><h2>{{ label }}</h2><dl class="summary-list"><div><dt>Acuerdo por nota</dt><dd>{{ round.unanimity.agreement_percent ~ '%' if round.unanimity.agreement_percent is not none else '—' }}</dd></div><div><dt>Acuerdo entre pares</dt><dd>{{ round.pairwise.agreement_percent ~ '%' if round.pairwise.agreement_percent is not none else '—' }}</dd></div><div><dt>Desacuerdos</dt><dd>{{ round.disagreements|length }}</dd></div><div><dt>Notas pendientes</dt><dd>{{ round.unanswered_notes }}</dd></div></dl></article>
+  {% endfor %}
+</div>
+<section class="change-section compact-change"><header class="section-heading"><div><p class="eyebrow">Entre rondas</p><h2>Cambios de clasificación</h2></div></header><div class="change-grid"><article><strong>{{ study.changes.true_to_false }}</strong><small>TRUE → FALSE</small></article><article><strong>{{ study.changes.false_to_true }}</strong><small>FALSE → TRUE</small></article><article><strong>{{ study.changes.unchanged }}</strong><small>Sin cambio</small></article><article><strong>{{ study.changes.missing_excluded }}</strong><small>Faltantes</small></article></div></section>
+{% else %}<div class="empty-state large"><strong>No hay resultados disponibles</strong><span>Importá un conjunto y completá anotaciones para generar el análisis.</span><a class="button primary" href="/admin/import">Importar notas</a></div>{% endif %}
+{% endblock %}

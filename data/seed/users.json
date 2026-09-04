@@ -1,20 +1,122 @@
 [
   {
-    "username": "ana",
-    "display_name": "Ana López",
-    "password": "local-only-ana-2026",
+    "username": "user01",
+    "display_name": "Usuario 01",
+    "password": "user@01",
     "role": "annotator"
   },
   {
-    "username": "bruno",
-    "display_name": "Bruno Pérez",
-    "password": "local-only-bruno-2026",
+    "username": "user02",
+    "display_name": "Usuario 02",
+    "password": "user@02",
     "role": "annotator"
   },
   {
-    "username": "carla",
-    "display_name": "Carla Gómez",
-    "password": "local-only-carla-2026",
+    "username": "user03",
+    "display_name": "Usuario 03",
+    "password": "user@03",
+    "role": "annotator"
+  },
+  {
+    "username": "user04",
+    "display_name": "Usuario 04",
+    "password": "user@04",
+    "role": "annotator"
+  },
+  {
+    "username": "user05",
+    "display_name": "Usuario 05",
+    "password": "user@05",
+    "role": "annotator"
+  },
+  {
+    "username": "user06",
+    "display_name": "Usuario 06",
+    "password": "user@06",
+    "role": "annotator"
+  },
+  {
+    "username": "user07",
+    "display_name": "Usuario 07",
+    "password": "user@07",
+    "role": "annotator"
+  },
+  {
+    "username": "user08",
+    "display_name": "Usuario 08",
+    "password": "user@08",
+    "role": "annotator"
+  },
+  {
+    "username": "user09",
+    "display_name": "Usuario 09",
+    "password": "user@09",
+    "role": "annotator"
+  },
+  {
+    "username": "user10",
+    "display_name": "Usuario 10",
+    "password": "user@10",
+    "role": "annotator"
+  },
+  {
+    "username": "user11",
+    "display_name": "Usuario 11",
+    "password": "user@11",
+    "role": "annotator"
+  },
+  {
+    "username": "user12",
+    "display_name": "Usuario 12",
+    "password": "user@12",
+    "role": "annotator"
+  },
+  {
+    "username": "user13",
+    "display_name": "Usuario 13",
+    "password": "user@13",
+    "role": "annotator"
+  },
+  {
+    "username": "user14",
+    "display_name": "Usuario 14",
+    "password": "user@14",
+    "role": "annotator"
+  },
+  {
+    "username": "user15",
+    "display_name": "Usuario 15",
+    "password": "user@15",
+    "role": "annotator"
+  },
+  {
+    "username": "user16",
+    "display_name": "Usuario 16",
+    "password": "user@16",
+    "role": "annotator"
+  },
+  {
+    "username": "user17",
+    "display_name": "Usuario 17",
+    "password": "user@17",
+    "role": "annotator"
+  },
+  {
+    "username": "user18",
+    "display_name": "Usuario 18",
+    "password": "user@18",
+    "role": "annotator"
+  },
+  {
+    "username": "user19",
+    "display_name": "Usuario 19",
+    "password": "user@19",
+    "role": "annotator"
+  },
+  {
+    "username": "user20",
+    "display_name": "Usuario 20",
+    "password": "user@20",
     "role": "annotator"
   },
   {
